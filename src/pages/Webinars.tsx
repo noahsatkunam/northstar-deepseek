@@ -7,7 +7,7 @@ import { Calendar, Clock, Play, Bell, ChevronDown, ArrowRight, Users } from "luc
 import { useContactModal } from "@/components/ContactModal";
 import { Helmet } from "react-helmet-async";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const API = import.meta.env.VITE_BACKEND_URL || "https://northstar-backend-frnb.onrender.com";
 
 interface Speaker {
   name: string;
