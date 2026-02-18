@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Wrench } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useContactModal } from "@/components/ContactModal";
 import { cn } from "@/lib/utils";
 
@@ -26,7 +25,6 @@ export function Header() {
     return location.pathname.startsWith(href);
   };
 
-  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -35,7 +33,6 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -47,7 +44,6 @@ export function Header() {
     };
   }, [mobileMenuOpen]);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
@@ -58,13 +54,14 @@ export function Header() {
         className={cn(
           "sticky top-0 z-50 w-full transition-all duration-300",
           isScrolled
-            ? "glass border-b border-white/10 shadow-lg backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 py-2"
-            : "bg-background/80 backdrop-blur-sm py-1"
+            ? "bg-navy-dark/90 backdrop-blur-xl border-b border-teal-border/40 shadow-[0_4px_24px_hsl(214_52%_3%/0.5)] py-2"
+            : "bg-navy-dark/80 backdrop-blur-sm py-1"
         )}
+        style={{ backgroundColor: isScrolled ? 'rgba(8,16,32,0.92)' : 'rgba(10,18,36,0.85)' }}
       >
-        <nav className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
+        <nav className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-8" style={{ maxWidth: '1200px' }}>
           {/* Logo */}
-          <Link to="/" className="flex items-center group">
+          <Link to="/" className="flex items-center group flex-shrink-0">
             <img
               src="/logos/northstar-logo.png"
               alt="NorthStar Technology Group"
@@ -73,60 +70,54 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden items-center gap-1 lg:flex">
+          <div className="hidden items-center gap-0.5 lg:flex">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  "px-3 py-2 text-sm font-medium transition-colors rounded-md",
+                  "px-3 py-2 transition-colors rounded-md relative",
+                  "label-caps tracking-wider",
                   item.isTool
                     ? cn(
-                        "flex items-center gap-1.5 bg-secondary/10 hover:bg-secondary/20",
-                        isActive(item.href)
-                          ? "text-secondary bg-secondary/20"
-                          : "text-secondary"
+                        "flex items-center gap-1.5",
+                        "border border-teal-border/50 hover:border-teal-DEFAULT/60",
+                        "text-teal-light hover:text-teal-light",
+                        "bg-teal-dark/10 hover:bg-teal-dark/20",
+                        isActive(item.href) ? "border-teal-DEFAULT/60 bg-teal-dark/20" : ""
                       )
                     : cn(
-                        // Base styles with underline animation setup
-                        "relative hover:text-primary hover:bg-muted",
-                        // Underline pseudo-element: slides in from left on hover
-                        "after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:bg-primary",
-                        "after:origin-left after:scale-x-0 after:transition-transform after:duration-200",
+                        "text-[#b0bec5] hover:text-white",
+                        "after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px]",
+                        "after:bg-primary after:origin-left after:scale-x-0",
+                        "after:transition-transform after:duration-200",
                         "hover:after:scale-x-100",
-                        // Active dot indicator: small centered dot below the underline (distinct from hover)
-                        "before:absolute before:bottom-[-4px] before:left-1/2 before:-translate-x-1/2",
-                        "before:h-1 before:w-1 before:rounded-full before:bg-primary",
-                        "before:opacity-0 before:transition-opacity before:duration-200",
                         isActive(item.href)
-                          ? "text-primary bg-muted after:scale-x-100 before:opacity-100"
-                          : "text-muted-foreground"
+                          ? "text-white after:scale-x-100"
+                          : ""
                       )
                 )}
               >
-                {item.isTool && <Wrench className="h-3.5 w-3.5" />}
+                {item.isTool && <Wrench className="h-3 w-3" />}
                 {item.name}
               </Link>
             ))}
           </div>
 
-          {/* Desktop CTA */}
+          {/* Desktop CTA - Orange pill */}
           <div className="hidden lg:flex">
-            <Button
-              variant="default"
-              size="sm"
+            <button
               onClick={openModal}
-              className="border-0 text-white animate-subtle-glow hover:brightness-110 transition-all"
-              style={{ background: 'var(--gradient-primary)' }}
+              className="orange-pill text-sm"
             >
               Contact Us
-            </Button>
+            </button>
           </div>
 
           {/* Mobile menu button */}
           <button
             type="button"
-            className="lg:hidden p-2 text-foreground hover:bg-muted rounded-md transition-colors"
+            className="lg:hidden p-2 text-[#b0bec5] hover:text-white rounded-md transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
@@ -144,25 +135,28 @@ export function Header() {
         className={cn(
           "fixed inset-0 z-40 lg:hidden transition-all duration-300 ease-out",
           mobileMenuOpen
-            ? "bg-foreground/25 backdrop-blur-[8px] opacity-100"
-            : "bg-transparent backdrop-blur-0 opacity-0 pointer-events-none"
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
         )}
+        style={{ background: 'rgba(5, 10, 24, 0.75)', backdropFilter: 'blur(8px)' }}
         onClick={() => setMobileMenuOpen(false)}
       />
 
       {/* Mobile Navigation Slide-in Panel */}
       <div
         className={cn(
-          "fixed top-0 right-0 z-50 h-full w-[280px] max-w-[85vw] bg-background shadow-xl lg:hidden transition-transform duration-300 ease-out",
+          "fixed top-0 right-0 z-50 h-full w-[280px] max-w-[85vw] lg:hidden transition-transform duration-300 ease-out",
+          "border-l border-teal-border/40",
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         )}
+        style={{ backgroundColor: 'hsl(210 50% 10%)' }}
       >
         {/* Mobile Menu Header */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-border">
-          <span className="text-lg font-bold text-foreground">Menu</span>
+        <div className="flex items-center justify-between h-16 px-4 border-b border-teal-border/30">
+          <span className="label-caps tracking-widest text-[#b0bec5]">Navigation</span>
           <button
             type="button"
-            className="p-2 text-foreground hover:bg-muted rounded-md transition-colors"
+            className="p-2 text-[#b0bec5] hover:text-white rounded-md transition-colors"
             onClick={() => setMobileMenuOpen(false)}
             aria-label="Close menu"
           >
@@ -179,55 +173,42 @@ export function Header() {
                 to={item.href}
                 onClick={() => setMobileMenuOpen(false)}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-3 text-base font-medium rounded-md",
-                  // Smooth transitions for hover and active states
-                  "transition-all duration-150",
-                  // Touch/tap feedback - scale down slightly when pressed
+                  "flex items-center gap-2 px-3 py-3 rounded-md",
+                  "label-caps transition-all duration-150",
                   "active:scale-[0.98] active:transition-none",
-                  // Staggered fade-in-up animation when menu is open
-                  mobileMenuOpen
-                    ? "animate-fade-in-up"
-                    : "opacity-0",
+                  mobileMenuOpen ? "animate-fade-in-up" : "opacity-0",
                   item.isTool
                     ? cn(
-                        "bg-secondary/10",
-                        isActive(item.href)
-                          ? "text-secondary bg-secondary/20"
-                          : "text-secondary hover:bg-secondary/20 active:bg-secondary/30"
+                        "border border-teal-border/50",
+                        "text-teal-light bg-teal-dark/10",
+                        isActive(item.href) ? "border-teal-DEFAULT/60" : ""
                       )
                     : cn(
-                        // Add relative and before: for active left border indicator
-                        "relative before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2",
-                        "before:h-4 before:w-1 before:rounded-full before:bg-primary",
-                        "before:opacity-0 before:transition-opacity before:duration-200",
+                        "relative border-l-2",
                         isActive(item.href)
-                          ? "text-primary bg-muted before:opacity-100"
-                          : "text-foreground hover:bg-muted hover:text-primary active:bg-muted/80"
+                          ? "text-white border-primary bg-primary/5"
+                          : "text-[#b0bec5] hover:text-white border-transparent hover:border-primary/40 hover:bg-white/5"
                       )
                 )}
-                style={{
-                  animationDelay: mobileMenuOpen ? `${index * 75}ms` : '0ms',
-                }}
+                style={{ animationDelay: mobileMenuOpen ? `${index * 60}ms` : '0ms' }}
               >
-                {item.isTool && <Wrench className="h-4 w-4" />}
+                {item.isTool && <Wrench className="h-3.5 w-3.5" />}
                 {item.name}
               </Link>
             ))}
           </div>
 
           {/* Mobile Menu Footer with CTA */}
-          <div className="p-4 border-t border-border">
-            <Button
-              variant="default"
-              className="w-full border-0 text-white animate-subtle-glow hover:brightness-110 transition-all"
-              style={{ background: 'var(--gradient-primary)' }}
+          <div className="p-4 border-t border-teal-border/30">
+            <button
+              className="orange-pill w-full text-center text-sm"
               onClick={() => {
                 setMobileMenuOpen(false);
                 openModal();
               }}
             >
               Contact Us
-            </Button>
+            </button>
           </div>
         </div>
       </div>

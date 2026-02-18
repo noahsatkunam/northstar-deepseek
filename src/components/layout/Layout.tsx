@@ -44,7 +44,10 @@ export function Layout({ children }: LayoutProps) {
   return (
     <div className="flex min-h-screen flex-col">
       {showBanner && (
-        <div className="relative z-50 flex items-center justify-center gap-2 bg-gradient-to-r from-primary via-primary/90 to-accent px-4 py-2.5 text-sm font-medium text-white">
+        <div
+          className="relative z-50 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white"
+          style={{ background: 'linear-gradient(90deg, hsl(19 63% 42%), hsl(19 63% 47%), hsl(19 63% 40%)' }}
+        >
           <a href={banner.link || "/webinars"} className="hover:underline">
             {banner.text}
           </a>
